@@ -1,5 +1,5 @@
 CSARCH2 Group 6
-Shiozawa, Ocampo, name, name
+Shiozawa, Ocampo, Sanchez, Fransisco
 
 Walkthrough Video:
 https://www.youtube.com/watch?v=77WnrLCPi74
