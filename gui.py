@@ -19,8 +19,12 @@ class CacheGUI:
         self.block_entry = tk.Entry(frame)
         self.block_entry.grid(row=0, column=1, padx=5)
 
+        self.show_steps_var = tk.BooleanVar(value=True)
+        self.step_checkbox = tk.Checkbutton(frame, text="Show Step-by-Step Output", variable=self.show_steps_var)
+        self.step_checkbox.grid(row=1, columnspan=2, sticky="w")
+
         self.run_button = tk.Button(frame, text="Run Simulation", command=self.run_simulation)
-        self.run_button.grid(row=1, columnspan=2, pady=10)
+        self.run_button.grid(row=2, columnspan=2, pady=10)
 
         result_frame = tk.Frame(self.root)
         result_frame.grid(row=1, column=0, padx=10, pady=10)
@@ -43,6 +47,7 @@ class CacheGUI:
                 return
 
             self.cache.reset_cache()
+
             self.run_test_cases(num_blocks)
         except ValueError:
             messagebox.showerror("Error", "Invalid input. Enter an integer value for memory blocks.")
@@ -62,13 +67,22 @@ class CacheGUI:
         self.run_sequence(mid_repeat)
 
     def run_sequence(self, sequence):
+        show_steps = self.show_steps_var.get()
+
+        hit_count, miss_count = 0, 0
         for block in sequence:
             hit = self.cache.access_block(block)
-            status = "Hit" if hit else "Miss"
-            self.output_text.insert(tk.END, f"Accessing block {block}: {status}\n")
+            if show_steps:
+                status = "Hit" if hit else "Miss"
+                self.output_text.insert(tk.END, f"Accessing block {block}: {status}\n")
+            
+            if hit:
+                hit_count += 1
+            else:
+                miss_count += 1
 
         stats = self.cache.get_stats()
-        self.output_text.insert(tk.END, f"\n\n\n\n\n\n\n\n\n\nStats:\n")
+        self.output_text.insert(tk.END, "\n" + "-" * 50 + "\nStats:\n")
         for key, value in stats.items():
             self.output_text.insert(tk.END, f"{key}: {value:.2f}\n")
         self.output_text.insert(tk.END, "-" * 50 + "\n")
